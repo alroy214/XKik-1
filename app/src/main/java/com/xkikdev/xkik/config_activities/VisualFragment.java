@@ -122,9 +122,8 @@ public class VisualFragment extends Fragment {
     /**
      * When clicked on the image picker, creates a dialog that will let the user choose images for the background.
      */
-    private void setImagePicker()
-    {
-        setBackground.setText("Background Image/s");
+    private void setImagePicker() {
+        setBackground.setText(R.string.bg_images);
         setBackground.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(final View v) {
@@ -140,13 +139,25 @@ public class VisualFragment extends Fragment {
                         .onFilesSelected(new FilePickerDialogFragment.OnFilesSelectedListener() {
                             @Override
                             public void onFileSelected(final List<File> list) {
-                                if(settings != null) {
-                                    settings.setFileList(list, false);
+                                if (settings != null) {
+                                    settings.setFileList(list, true);
                                 }
                             }
                         })
                         .build()
                         .show(getActivity().getSupportFragmentManager(), null);
+            }
+        });
+        setBackground.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                settings.getFileList().clear();
+                try {
+                    settings.save(true);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                return true;
             }
         });
     }
